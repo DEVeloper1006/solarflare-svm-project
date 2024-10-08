@@ -97,10 +97,10 @@ class SolarFlareSVM:
 
         # Calculate Sensitivity and Specificity
         sensitivity = tp / (tp + fn) if (tp + fn) > 0 else 0
-        specificity = tn / (tn + fp) if (tn + fp) > 0 else 0
+        specificity = fp / (tn + fp) if (tn + fp) > 0 else 0
 
         # Calculate TSS
-        return sensitivity + specificity - 1
+        return sensitivity - specificity
   
 #Function to determine if a flare class of the {pos,neg}_class.npy files are 1 or -1
 def classify_flare(flare_class):
