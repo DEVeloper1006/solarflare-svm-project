@@ -270,6 +270,24 @@ def no_shuffle_experiment(best_combination : list):
     get_confusion_matrix(all_matrices, "No Shuffle Experiment")
     print(f"Accuracy: {accuracy}, TSS: {np.mean(tss_scores)}")
     
+#Model to be trained
+X, Y = get_X_Y("./data/data-2010-15")
+my_svm = SolarFlareSVM(X, Y, C=1.821)
+my_svm.feature_creation([1,4])
+my_svm.preprocess()
+
+#Gets the normalized X values for the Testing
+X2, Y2 = get_X_Y("./data/data-2020-24")
+my_svm2 = SolarFlareSVM(X2, Y2, C=1.821)
+my_svm2.feature_creation([1,4])
+my_svm2.preprocess()
+
+my_svm.train() #Trains the Model
+Y_predict = my_svm.predict(my_svm2.X_normalized) #Getting predicts for the model from the Testing Set
+Y_predict2 = my_svm.predict(my_svm.X_normalized) #Gets predics for the model from the Training Set
+print(accuracy_score(my_svm.Y_normalized, Y_predict2), my_svm.tss(my_svm.Y_normalized, Y_predict2)) #Accuracy of Training
+print(accuracy_score(my_svm2.Y_normalized, Y_predict), my_svm.tss(my_svm2.Y_normalized, Y_predict)) #Accuracy of Testing
+
 #Calls each experiment
 best_combination = feature_experiment()    
 data_experiment(best_combination=best_combination)
