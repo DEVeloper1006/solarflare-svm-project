@@ -104,7 +104,7 @@ class SolarFlareSVM:
   
 #Function to determine if a flare class of the {pos,neg}_class.npy files are 1 or -1
 def classify_flare(flare_class):
-    return -1 if flare_class is None else 1
+    return 0 if flare_class is None else 1
 
 #Gets Confusion Matrix
 def get_confusion_matrix(confusion_matrices, list_of_matrices):
