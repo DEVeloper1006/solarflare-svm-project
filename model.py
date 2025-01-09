@@ -53,17 +53,6 @@ class SolarFlareSVM:
         self.X_normalized = (X_ - means) / std_devs  # Column-wise normalization
         self.Y_normalized = self.Y.to_numpy()
         
-    def preprocess1(self):
-        X_ = self.X
-        means = np.mean(X_, axis=0)
-        std_devs = np.std(X_, axis=0)
-
-        # Replace any standard deviations of zero with 1 to avoid division by zero
-        std_devs[std_devs == 0] = 1
-
-        self.X_normalized = (X_ - means) / std_devs  # Column-wise normalization
-        self.Y_normalized = self.Y
-    
     # Train the SVM using the normalized data
     def train(self):
         self.model.fit(self.X_normalized, self.Y_normalized)
@@ -84,18 +73,11 @@ class SolarFlareSVM:
             X_train, X_test = self.X_normalized[train_index], self.X_normalized[test_index]
             Y_train, Y_test = self.Y_normalized[train_index], self.Y_normalized[test_index]
 
-            training_model = SolarFlareSVM(X_train, Y_train, C=self.C)
-            training_model.preprocess1()
-            training_model.train()
-            
-            testing_model = SolarFlareSVM(X_test, Y_test, C=self.C)
-            testing_model.preprocess1()
-            Y_predicted = training_model.predict(testing_model.X_normalized)
             # Train the model
-            #self.model.fit(X_train, Y_train)
+            self.model.fit(X_train, Y_train)
 
             # Predict on the test set
-            #Y_predicted = self.model.predict(X_test)
+            Y_predicted = self.model.predict(X_test)
 
             # Calculate accuracy
             accuracy.append(accuracy_score(Y_test, Y_predicted))
@@ -240,7 +222,7 @@ def get_X_Y (directory : str, shuffle=True):
 
 #Feature Experiment
 def feature_experiment ():
-    X, Y = get_X_Y("./data/data-2020-24")
+    X, Y = get_X_Y("./data/data-2010-15")
     all_combinations = [list(tup) for tup in power_set([1,2,3,4])[1:]]
     all_tss_scores = []
     best_tss = 0
